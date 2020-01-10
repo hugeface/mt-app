@@ -1,7 +1,13 @@
 <template>
-  <div>
-    <nuxt />
-  </div>
+  <el-container>
+    <el-header>Header</el-header>
+    <el-main>
+      <div>
+        <nuxt />
+      </div>
+    </el-main>
+    <el-footer>Footer</el-footer>
+  </el-container>
 </template>
 
 <style>
