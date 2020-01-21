@@ -24,7 +24,8 @@ module.exports = {
   */
   css: [
     'element-ui/lib/theme-chalk/reset.css',
-    'element-ui/lib/theme-chalk/index.css'
+    'element-ui/lib/theme-chalk/index.css',
+    '@/assets/css/main.css'
   ],
   /*
   ** Plugins to load before mounting the App
@@ -41,6 +42,8 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: [
+    // Doc: https://github.com/nuxt-community/axios-module#usage
+    '@nuxtjs/axios'
   ],
   /*
   ** Build configuration
