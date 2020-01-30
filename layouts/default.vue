@@ -12,9 +12,9 @@
   </el-container>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
-import MyHeader from '../components/public/header/index.vue'
+import MyHeader from '@/components/public/header/index.vue'
 export default Vue.extend({
   components: { MyHeader }
 })

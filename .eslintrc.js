@@ -1,10 +1,16 @@
 module.exports = {
   env: {
     browser: true,
+    node: true,
     es6: true
   },
   extends: [
-    'plugin:vue/essential',
+    'eslint:recommended',
+    // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
+    // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
+    'plugin:vue/recommended',
+    // 'plugin:prettier/recommended',
+    // 'plugin:vue/essential',
     'standard'
   ],
   globals: {
