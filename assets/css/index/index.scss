@@ -1,9 +1,11 @@
 .page-index{
+    width: 1190px;
+    margin: auto;
+    margin-top: 70px;
     .m-menu {
       width: 230px;
       height: 475px;
       box-sizing: border-box;
-      // margin-top: -50px;
       margin-left: 20px;
       color: #FFF;
       position: relative;
@@ -167,7 +169,7 @@
         padding: 0 30px;
         position: absolute;
         left: 230px;
-        bottom: 0;
+        top: 50px;
         width: 400px;
         height: 416px;
         background: #fff;
