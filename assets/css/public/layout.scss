@@ -5,6 +5,15 @@
     overflow: unset;
 }
 
+.el-main{
+  padding:5px;
+  z-index: 5;
+}
+
+.el-header{
+  height: auto!important;
+}
+
 .el-header{
     background: #F8F8F8;
     color: #999;
