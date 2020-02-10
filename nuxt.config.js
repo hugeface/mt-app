@@ -40,6 +40,7 @@ module.exports = {
   ],
   /*
   ** Nuxt.js modules
+  ** 会被挂载到vue实例中，可被直接访问
   */
   modules: [
     // Doc: https://github.com/nuxt-community/axios-module#usage
