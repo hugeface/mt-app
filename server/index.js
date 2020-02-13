@@ -5,6 +5,7 @@ import bodyParser from 'koa-bodyparser'
 import session from 'koa-generic-session'
 import Redis from 'koa-redis'
 import json from 'koa-json'
+import logger from 'koa-logger'
 import dbConfig from './dbs/config'
 import passport from './interface/utils/passport'
 import users from './interface/users'
@@ -25,6 +26,7 @@ app.use(bodyParser({
   extendTypes: ['json', 'form', 'text']
 }))
 app.use(json())
+app.use(logger())
 
 mongoose.connect(dbConfig.dbs, {
   useNewUrlParser: true

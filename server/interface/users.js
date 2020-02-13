@@ -7,19 +7,13 @@ import Email from '../dbs/config'
 import axios from './utils/axios'
 
 // koa-router参考文档： https://github.com/ZijianHe/koa-router#new_module_koa-router--Router_new
-const router = new Router({
-  prefix: '/users'
-})
+const router = new Router({ prefix: '/users' })
 
 const Store = new Redis().client
 
+// ctx 是全局对象，挂载request和response信息
 router.post('/signup', async (ctx) => {
-  const {
-    username,
-    password,
-    email,
-    code
-  } = ctx.request.body
+  const { username, password, email, code } = ctx.request.body
 
   if (code) {
     const saveCode = await Store.hget(`nodemail:${username}`, 'code')
@@ -44,26 +38,17 @@ router.post('/signup', async (ctx) => {
       msg: '请填写验证码'
     }
   }
-  const user = await User.find({
-    username
-  })
+  const user = await User.find({ username })
   if (user.length) {
     ctx.body = {
       code: -1,
       msg: '已被注册'
     }
-    return false
+    return
   }
-  const nuser = await User.create({
-    username,
-    password,
-    email
-  })
+  const nuser = await User.create({ username, password, email })
   if (nuser) {
-    const res = await axios.post('/users/signin', {
-      username,
-      password
-    })
+    const res = await axios.post('/users/signin', { username, password })
     if (res.data && res.data.code === 0) {
       ctx.body = {
         code: 0,
@@ -85,7 +70,7 @@ router.post('/signup', async (ctx) => {
 })
 
 router.post('/signin', async (ctx, next) => {
-  return Passport.authenticate('locate', function (err, user, info, status) {
+  return Passport.authenticate('local', function (err, user, info, status) {
     if (err) {
       ctx.body = {
         code: -1,
@@ -135,21 +120,21 @@ router.post('/verify', async (ctx, next) => {
     user: ctx.request.body.username
   }
   const mailOptions = {
-    from: `"认证邮件"<${Email.smtp.user}>`,
+    from: `"认证邮件" <${Email.smtp.user}>`,
     to: ko.email,
-    subject: '《美团全栈实战》注册码',
-    html: `您在《美团全栈实战》中注册，您的邀请码是${ko.code}`
+    subject: '《高仿美团网全栈实战》注册码',
+    html: `您在《高仿美团网全栈实战》课程中注册，您的邀请码是${ko.code}`
   }
   await transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      return console.error(error)
+      return console.log(error)
     } else {
       Store.hmset(`nodemail:${ko.user}`, 'code', ko.code, 'expire', ko.expire, 'email', ko.email)
     }
   })
   ctx.body = {
     code: 0,
-    msg: '验证码已发送，可能会有延迟，有效期1分钟'
+    msg: '验证码已发送，可能会有延时，有效期1分钟'
   }
 })
 
