@@ -15,33 +15,46 @@
         class="center"
       >
         <div class="wrapper">
-          <el-input placeholder="搜索商家或地点" />
-          <button class="el-button el-button-primary">
+          <el-input
+            v-model="search"
+            placeholder="搜索商家或地点"
+            @focus="focus"
+            @blur="blur"
+            @input="input"
+          />
+          <button class="el-button el-button--primary">
             <i class="el-icon-search" />
           </button>
-          <dl class="hotPlace">
+          <dl
+            v-if="isHotPlace"
+            class="hotPlace"
+          >
             <dt>热门搜索</dt>
-            <dd>火锅</dd>
-            <dd>火锅</dd>
-            <dd>火锅</dd>
-            <dd>火锅</dd>
-            <dd>火锅</dd>
+            <dd
+              v-for="(item,idx) in $store.state.home.hotPlace.slice(0,5)"
+              :key="idx"
+            >
+              <a :href="'/products?keyword='+encodeURIComponent(item.name)">{{ item.name }}</a>
+            </dd>
           </dl>
-          <dl class="searchList">
-            <dd>故宫</dd>
-            <dd>故宫</dd>
-            <dd>故宫</dd>
-            <dd>故宫</dd>
-            <dd>故宫</dd>
-            <dd>故宫</dd>
+          <dl
+            v-if="isSearchList"
+            class="searchList"
+          >
+            <dd
+              v-for="(item,idx) in searchList"
+              :key="idx"
+            >
+              <a :href="'/products?keyword='+encodeURIComponent(item.name)">{{ item.name }}</a>
+            </dd>
           </dl>
         </div>
-        <p class="suggset">
-          <a href="#">故宫博物院</a>
-          <a href="#">故宫博物院</a>
-          <a href="#">故宫博物院</a>
-          <a href="#">故宫博物院</a>
-          <a href="#">故宫博物院</a>
+        <p class="suggest">
+          <a
+            v-for="(item,idx) in $store.state.home.hotPlace.slice(0,5)"
+            :key="idx"
+            :href="'/products?keyword='+encodeURIComponent(item.name)"
+          >{{ item.name }}</a>
         </p>
         <ul class="nav">
           <li>
@@ -92,17 +105,17 @@
       >
         <ul class="security">
           <li>
-            <i class="refund" /><p class="text">
+            <i class="refund" /><p class="txt">
               随时退
             </p>
           </li>
           <li>
-            <i class="single" /><p class="text">
+            <i class="single" /><p class="txt">
               不满意免单
             </p>
           </li>
           <li>
-            <i class="overdue" /><p class="text">
+            <i class="overdue" /><p class="txt">
               过期退
             </p>
           </li>
@@ -112,9 +125,50 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-export default Vue.extend({
-
-})
+<script>
+import _ from 'lodash'
+export default {
+  data () {
+    return {
+      search: '',
+      isFocus: false,
+      hotPlace: [],
+      searchList: []
+    }
+  },
+  computed: {
+    isHotPlace: function () {
+      return this.isFocus && !this.search
+    },
+    isSearchList: function () {
+      return this.isFocus && this.search
+    }
+  },
+  methods: {
+    focus: function () {
+      this.isFocus = true
+    },
+    blur: function () {
+      const self = this
+      setTimeout(function () {
+        self.isFocus = false
+      }, 200)
+    },
+    input: _.debounce(async function () {
+      const self = this
+      const city = self.$store.state.geo.position.city.replace('市', '')
+      self.searchList = []
+      const { status, data: { top } } = await self.$axios.get('/search/top', {
+        params: {
+          input: self.search,
+          city
+        }
+      })
+      status === 200 && (self.searchList = top.slice(0, 10))
+    }, 300)
+  }
+}
 </script>
+
+<style lang="css">
+</style>
